@@ -14,9 +14,24 @@ export default function Home() {
   );
 }
 
-function Form() {
+import { pushData, pullData } from '../src/mongodb';
+
+async function Form() {
+
+  let uuid = localStorage.getItem('uuid-mongodb');
+  if (!uuid) {
+    localStorage.setItem(crypto.randomUUID());
+    uuid = localStorage.getItem('uuid');
+  }
+
+  const initData = await pullData(uuid);
+
   let [newItem, setNewItem] = useState("");
-  let [todoItems, setTodoItems] = useState([]);
+  let [todoItems, setTodoItems] = useState(initData);
+
+  setInterval(() => {
+    pushData(uuid, todoItems);
+  }, 1000);
 
   const handleSubmit = (event) => {
     const e = event;
