@@ -62,7 +62,7 @@ function ListItems({ todoItems, setTodos }) {
     <ul className="list">
       {
         todoItems.map(
-          (item, i) => item.title
+          (item, i) => item && item.title
             ? <ListItem todoItems={todoItems} idx={i} setTodos={setTodos} />
             : null
         )
@@ -72,13 +72,18 @@ function ListItems({ todoItems, setTodos }) {
 }
 
 function ListItem({ todoItems, idx, setTodos }) {
-  const handleToggleTodo = (target, id) => {
-    setTodos(currentTodos => currentTodos.map((item) => {
-      if (item.id === id) {
-        return { ...item, complete: target.checked };
-      }
-      return item;
-    }));
+  const handleToggleTodo = (complete, id) => {
+    setTodos(currentTodos => currentTodos.map(
+      item => item && item.id === id
+        ? { ...item, complete }
+        : item
+    ));
+  }
+
+  const handleTodoDel = (id) => {
+    setTodos(currentTodos => currentTodos.filter(
+      item => item && item.id !== id
+    ));
   }
 
   const content = todoItems[idx];
@@ -88,11 +93,14 @@ function ListItem({ todoItems, idx, setTodos }) {
         <input
           type="checkbox"
           checked={content.complete}
-          id={content.id}
-          onChange={e => handleToggleTodo(e.target, content.id)} />
+          onChange={e => handleToggleTodo(e.target.checked, content.id)} />
         {content.title}
       </label>
-      <button className="btn btn-danger">Delete</button>
+      <button
+        className="btn btn-danger"
+        onClick={e => handleTodoDel(content.id)} >
+        Delete
+      </button>
     </li>
   );
 }
