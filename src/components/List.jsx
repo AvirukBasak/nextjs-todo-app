@@ -1,23 +1,51 @@
+import { useEffect, useState } from 'react';
 import { handleToggleTodo, handleTodoDel } from '../modules/handlers.js';
 
-// add code to pull data from db with api endpoint at /api/todos
+export default function TodoList({ todoItemsHook }) {
 
-export default function TodoList({ hooks }) {
+  const [todoItems, setTodoItems] = todoItemsHook;
+
   return (
     <div>
       <h1>Todo List</h1>
-      <ListItems hooks={hooks} />
+      <ListItems todoItemsHook={[todoItems, setTodoItems]} />
     </div>
   );
 }
 
-function ListItems({ hooks }) {
+function ListItems({ todoItemsHook }) {
+
+  const [todoItems, setTodoItems] = todoItemsHook;
+
+  useEffect(() => {
+    fetch('/api/todos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        method: 'READ',
+        uuid: localStorage.getItem('user-uuid'),
+        timestamp: (new Date()).toLocaleString(),
+      })
+    }).then(async data => {
+      const resBody = await data.json();
+      setTodoItems(currentItems => resBody?.data?.todoItems
+        ? resBody?.data?.todoItems
+        : currentItems
+      );
+    }).catch(e => {
+      console.error(e);
+      throw e;
+    })
+  }, []);
+
   return (
     <ul className="list">
       {
-        hooks.todoItems.map(
+        todoItems.map(
           (item, i) => item && item.title
-            ? <ListItem hooks={hooks} idx={i} />
+            ? <ListItem items={todoItems}
+              idx={i}
+              todoItemsHook={[todoItems, setTodoItems]} />
             : null
         )
       }
@@ -25,20 +53,23 @@ function ListItems({ hooks }) {
   );
 }
 
-function ListItem({ hooks, idx }) {
-  const content = hooks.todoItems[idx];
+function ListItem({ items, idx, todoItemsHook }) {
+
+  const [todoItems, setTodoItems] = todoItemsHook;
+  const content = items[idx];
+
   return (
     <li key={content.id}>
       <label>
         <input
           type="checkbox"
           checked={content.complete}
-          onChange={e => handleToggleTodo(hooks, e.target.checked, content.id)} />
+          onChange={e => handleToggleTodo(content.id, e.target.checked, setTodoItems)} />
         {content.title}
       </label>
       <button
         className="btn btn-danger"
-        onClick={e => handleTodoDel(hooks, content.id)} >
+        onClick={e => handleTodoDel(content.id, setTodoItems)} >
         Delete
       </button>
     </li>

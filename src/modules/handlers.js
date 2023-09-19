@@ -1,9 +1,9 @@
-export const handleSubmit = async (hooks, uuid) => {
-    hooks.setTodoItems(currentTodos => {
+export const handleSubmit = async (uuid, newItem, setTodoItems, setNewItem) => {
+    setTodoItems(currentTodos => {
         const result = [
             ...currentTodos, {
-                id: uuid,
-                title: hooks.newItem,
+                id: crypto.randomUUID(),
+                title: newItem,
                 complete: false,
             }
         ];
@@ -22,19 +22,19 @@ export const handleSubmit = async (hooks, uuid) => {
         });
         return result;
     });
-    hooks.setNewItem('');
+    setNewItem('');
 }
 
-export const handleToggleTodo = (hooks, complete, id) => {
-    hooks.setTodoItems(currentTodos => currentTodos.map(
+export const handleToggleTodo = (id, isComplete, setTodoItems) => {
+    setTodoItems(currentTodos => currentTodos.map(
         item => item && item.id === id
-            ? { ...item, complete }
+            ? { ...item, complete: isComplete }
             : item
     ));
 }
 
-export const handleTodoDel = (hooks, id) => {
-    hooks.setTodoItems(currentTodos => currentTodos.filter(
+export const handleTodoDel = (id, setTodoItems) => {
+    setTodoItems(currentTodos => currentTodos.filter(
         item => item && item.id !== id
     ));
 }

@@ -1,7 +1,12 @@
+import { useState } from 'react';
 import { handleSubmit } from '../modules/handlers.js';
 import TodoList from './List.jsx';
 
-export default function Form({ hooks }) {
+export default function Form() {
+
+  const [newItem, setNewItem] = useState("");
+  const [todoItems, setTodoItems] = useState([]);
+
   return (
     <form onSubmit={e => e.preventDefault()} className="new-item-form">
       <div className="form-row">
@@ -10,19 +15,19 @@ export default function Form({ hooks }) {
           type="text"
           placeholder="Enter new todo item"
           id="item"
-          value={hooks.newItem}
-          onChange={e => { hooks.setNewItem(e.target.value); }} />
+          value={newItem}
+          onChange={e => { setNewItem(e.target.value); }} />
       </div>
       <button className="btn"
         onClick={e => {
           if (!localStorage.getItem('user-uuid')) {
             localStorage.setItem('user-uuid', crypto.randomUUID());
           }
-          handleSubmit(hooks, localStorage.getItem('user-uuid'))
+          handleSubmit(localStorage.getItem('user-uuid'), newItem, setTodoItems, setNewItem);
         }}>
         Add
       </button>
-      <TodoList hooks={hooks} />
+      <TodoList todoItemsHook={[ todoItems, setTodoItems ]} />
     </form>
   )
 }
