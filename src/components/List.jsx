@@ -1,21 +1,15 @@
-import { useEffect, useState } from 'react';
-import { handleToggleTodo, handleTodoDel } from '../modules/handlers.js';
+import { useEffect } from 'react';
 
-export default function TodoList({ todoItemsHook }) {
-
-  const [todoItems, setTodoItems] = todoItemsHook;
-
+export default function TodoList({ value, setValue }) {
   return (
     <div>
       <h1>Todo List</h1>
-      <ListItems todoItemsHook={[todoItems, setTodoItems]} />
+      <ListItems value={value} setValue={setValue} />
     </div>
   );
 }
 
-function ListItems({ todoItemsHook }) {
-
-  const [todoItems, setTodoItems] = todoItemsHook;
+function ListItems({ value, setValue }) {
 
   useEffect(() => {
     fetch('/api/todos', {
@@ -28,10 +22,8 @@ function ListItems({ todoItemsHook }) {
       })
     }).then(async data => {
       const resBody = await data.json();
-      setTodoItems(currentItems => resBody?.data?.todoItems
-        ? resBody?.data?.todoItems
-        : currentItems
-      );
+      console.log(resBody);
+      setValue(currentItems => resBody?.data?.todoItems || currentItems);
     }).catch(e => {
       console.error(e);
       throw e;
@@ -41,11 +33,9 @@ function ListItems({ todoItemsHook }) {
   return (
     <ul className="list">
       {
-        todoItems.map(
-          (item, i) => item && item.title
-            ? <ListItem items={todoItems}
-              idx={i}
-              todoItemsHook={[todoItems, setTodoItems]} />
+        value.map(
+          item => item && item.title
+            ? <ListItem value={item} setTodoItems={setValue} />
             : null
         )
       }
@@ -53,23 +43,34 @@ function ListItems({ todoItemsHook }) {
   );
 }
 
-function ListItem({ items, idx, todoItemsHook }) {
+function ListItem({ value, setTodoItems }) {
 
-  const [todoItems, setTodoItems] = todoItemsHook;
-  const content = items[idx];
+  const handleToggleTodo = (id, isComplete) => {
+    setTodoItems(currentTodos => currentTodos.map(
+      item => item && item.id === id
+        ? { ...item, complete: isComplete }
+        : item
+    ));
+  }
+
+  const handleTodoDel = (id) => {
+    setTodoItems(currentTodos => currentTodos.filter(
+      item => item && item.id !== id
+    ));
+  }
 
   return (
-    <li key={content.id}>
+    <li key={value.id}>
       <label>
         <input
           type="checkbox"
-          checked={content.complete}
-          onChange={e => handleToggleTodo(content.id, e.target.checked, setTodoItems)} />
-        {content.title}
+          checked={value.complete}
+          onChange={e => handleToggleTodo(value.id, e.target.checked)} />
+        {value.title}
       </label>
       <button
         className="btn btn-danger"
-        onClick={e => handleTodoDel(content.id, setTodoItems)} >
+        onClick={e => handleTodoDel(value.id)} >
         Delete
       </button>
     </li>
