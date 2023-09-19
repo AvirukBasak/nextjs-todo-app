@@ -6,11 +6,35 @@ export default function Form() {
   const [newItem, setNewItem] = useState("");
   const [todoItems, setTodoItems] = useState([]);
 
+  const [inputDisabled, setInputDisabled] = useState(true);
+
   /* create a session key if not exists on app start */
   useEffect(() => {
     if (!localStorage.getItem('user-uuid'))
       localStorage.setItem('user-uuid', crypto.randomUUID());
     console.log(`user uuid is ${localStorage.getItem('user-uuid')}`);
+  }, []);
+
+  /* load list from server on first render */
+  useEffect(() => {
+    fetch('/api/todos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        method: 'READ',
+        uuid: localStorage.getItem('user-uuid'),
+        timestamp: (new Date()).toLocaleString(),
+      })
+    }).then(async data => {
+      const resBody = await data.json();
+      setTodoItems(currentItems => {
+        setInputDisabled(false);
+        return resBody?.data?.todoList || currentItems;
+      });
+    }).catch(e => {
+      console.error(e);
+      throw e;
+    })
   }, []);
 
   /* upload data to db on todoItems change
@@ -54,11 +78,15 @@ export default function Form() {
           id="item"
           type="text"
           value={newItem}
-          placeholder="Enter new todo item"
+          disabled={inputDisabled}
+          placeholder={inputDisabled ? 'Loading Server Data...' : 'Enter new todo item'}
           onChange={e => { setNewItem(e.target.value); }} />
       </div>
-      <button className="btn" onClick={handleSubmit}>
-        Add
+      <button
+        className="btn"
+        disabled={inputDisabled}
+        onClick={handleSubmit}>
+        {inputDisabled ? 'Loading Server Data...' : 'Add Item'}
       </button>
       <TodoList value={todoItems} setValue={setTodoItems} />
     </form>
