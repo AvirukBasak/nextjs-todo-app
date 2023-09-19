@@ -11,7 +11,7 @@ export default function TodoList({ value, setValue }) {
 
 function ListItems({ value, setValue }) {
 
-  // load list from server on first render
+  /* load list from server on first render */
   useEffect(() => {
     fetch('/api/todos', {
       method: 'POST',

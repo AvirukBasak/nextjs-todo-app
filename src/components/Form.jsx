@@ -6,14 +6,16 @@ export default function Form() {
   const [newItem, setNewItem] = useState("");
   const [todoItems, setTodoItems] = useState([]);
 
-  // create a session key if not exists
+  /* create a session key if not exists on app start */
   useEffect(() => {
     if (!localStorage.getItem('user-uuid'))
       localStorage.setItem('user-uuid', crypto.randomUUID());
     console.log(`user uuid is ${localStorage.getItem('user-uuid')}`);
   }, []);
 
-  // upload data to db on todoItems change
+  /* upload data to db on todoItems change
+     called 2wice on start:
+     1ce on init and 1ce on todoItems changed after READ in ListItems */
   useEffect(() => {
     fetch('/api/todos', {
       method: 'POST',

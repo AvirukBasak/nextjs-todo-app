@@ -6,7 +6,7 @@ async function downloadData(uuid) {
     try {
         const data = await db.collection('todos').findOne({ uuid });
         console.log('download: ' + JSON.stringify({ uuid: data.uuid, todoList: data.todoList }));
-        return { uuid: data.uuid, todoList: data.todoList };
+        return { uuid: data.uuid, todoList: data.todoList, timestamp: data.timestamp };
     } catch (e) {
         console.error(e);
     }
@@ -19,7 +19,7 @@ async function uploadData(uuid, todoList) {
     try {
         const res = await db.collection('todos').replaceOne(
             { uuid },
-            { uuid, todoList },
+            { uuid, todoList, timestamp: (new Date()).toLocaleString() },
             { upsert : true }
         );
         return { echo: { uuid, todoList }, response: { status: 200, message: 'OK', ...res }};
