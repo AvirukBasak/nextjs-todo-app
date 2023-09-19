@@ -1,13 +1,29 @@
-export const handleSubmit = (hooks, e) => {
-    e.preventDefault();
+export const handleSubmit = async (hooks) => {
+    const uuid = crypto.randomUUID();
+    try {
+        const res = await fetch('/api/todos', {
+            method: 'POST',
+            headers: { 'Conten-Type': 'application/json' },
+            body: {
+                method: 'UPDATE',
+                uuid: uuid,
+                title: hooks.newItem,
+                complete: false,
+            }
+        });
+        hooks.setApiCallState(res);
+    } catch (e) {
+        console.error(e);
+        alert(e);
+    }
     hooks.setTodoItems(currentTodos => [
         ...currentTodos, {
-            id: crypto.randomUUID(),
+            id: uuid,
             title: hooks.newItem,
             complete: false,
         }
     ]);
-    hooks.setNewItem("");
+    hooks.setNewItem('');
 }
 
 export const handleToggleTodo = (hooks, complete, id) => {
@@ -23,3 +39,4 @@ export const handleTodoDel = (hooks, id) => {
         item => item && item.id !== id
     ));
 }
+

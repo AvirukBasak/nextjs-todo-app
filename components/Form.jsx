@@ -3,7 +3,7 @@ import TodoList from './List.jsx';
 
 export default function Form({ hooks }) {
   return (
-    <form onSubmit={e => handleSubmit(hooks, e)} className="new-item-form">
+    <form onSubmit={e => e.preventDefault()} className="new-item-form">
       <div className="form-row">
         <label htmlFor="item">New Item</label>
         <input
@@ -13,7 +13,7 @@ export default function Form({ hooks }) {
           value={hooks.newItem}
           onChange={e => { hooks.setNewItem(e.target.value); }} />
       </div>
-      <button className="btn">Add</button>
+      <button className="btn" onClick={e => handleSubmit(hooks, e)}>Add</button>
       <TodoList hooks={hooks}/>
     </form>
   )

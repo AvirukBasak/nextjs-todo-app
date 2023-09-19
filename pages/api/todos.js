@@ -1,19 +1,27 @@
 import clientPromise from '../../lib/mongodb';
 
 async function downloadData(uuid) {
-     const client = await clientPromise;
-     const db = client.db('nextjs-todo-db');
-     const data = await db.collection('todos').findOne({ uuid });
-     return { uuid: data.uuid, todoList: data.todoList };
+    const client = await clientPromise;
+    const db = client.db('nextjs-todo-db');
+    try {
+        const data = await db.collection('todos').findOne({ uuid });
+        return { uuid: data.uuid, todoList: data.todoList };
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 async function uploadData(uuid, todoList) {
-     const client = await clientPromise;
-     const db = client.db('nextjs-todo-db');
-     return await db.collection('todos').replaceOne(
-         { uuid },
-         { uuid, todoList }
-     );
+    const client = await clientPromise;
+    const db = client.db('nextjs-todo-db');
+    try {
+        return await db.collection('todos').replaceOne(
+            { uuid },
+            { uuid, todoList }
+        );
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 /**
@@ -41,7 +49,7 @@ export default async (req, res) => {
         res.json({ status: 405, message: 'only POST request is supported' });
         return;
     }
-    const reqBody = JSON.parse(req.body);
+    const reqBody = req.body;
     if (!reqBody?.method) {
         res.json({ status: 400, message: 'POST should have `method` field' });
         return;
@@ -55,7 +63,7 @@ export default async (req, res) => {
                         message: 'POST READ should have `uuid` field',
                     });
                     return;
-                 }
+                }
                 const data = downloadData(reqBody.uuid);
                 res.json({ status: 200, data });
                 return;
