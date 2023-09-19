@@ -15,12 +15,14 @@ async function uploadData(uuid, todoList) {
     const client = await clientPromise;
     const db = client.db('nextjs-todo-db');
     try {
-        return await db.collection('todos').replaceOne(
+        const res = await db.collection('todos').replaceOne(
             { uuid },
             { uuid, todoList }
         );
+        return { echo: { uuid, todoList }, response: { status: 200, message: 'OK', ...res }};
     } catch (e) {
         console.error(e);
+        return { echo: { uuid, todoList }, response: { status: 400, message: e.toString() }};
     }
 }
 
@@ -76,8 +78,8 @@ export default async (req, res) => {
                     });
                     return;
                 }
-                let push = uploadData(reqBody.uuid, reqBody.todoList);
-                res.json(push.ops[0]);
+                let {echo, response} = await uploadData(reqBody.uuid, reqBody.todoList);
+                res.json({ status: 200, echo, response });
                 return;
             default:
                 res.json({
@@ -88,7 +90,6 @@ export default async (req, res) => {
         }
     } catch (e) {
         res.json({ status: 400, message: e.toString() });
-        console.error(e);
-        return;
+        throw e;
     }
 };
