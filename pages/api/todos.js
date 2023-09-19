@@ -29,20 +29,33 @@ async function uploadData(uuid, todoList) {
 /**
 
 api endpoint: /api/todos
-
+------------------------------------------------------
 request: POST: body: {
-    method: 'READ',
-    uuid: 'user-id',
+    "method": "READ",
+    "uuid": "some-demo-user-id",
 }
 response: body: {
     status: 200,
     data: { uuid: uuid, todoList: [] },
 }
-
+-------------------------------------------------------
 request: POST: body: {
-    method: 'UPDATE',
-    uuid: 'user-id',
-    todoList: [],
+    "method": "UPDATE",
+    "uuid": "some-demo-user-id",
+    "todoList": []
+}
+response: body {
+    "status": 200,
+    "echo": {
+        "uuid": "some-demo-user-id",
+        "todoList": []
+    },
+    "response": {
+        "status": 200,
+        "message": "OK",
+        "acknowledged": true,
+        ...
+    }
 }
 
 */
