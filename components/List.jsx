@@ -1,30 +1,23 @@
-import { useState } from 'react';
-import { handleSubmit, handleToggleTodo, handleTodoDel } from '../modules/handlers.js';
+import { handleToggleTodo, handleTodoDel } from '../modules/handlers.js';
 
-let [newItem, setNewItem] = useState("");
-let [todoItems, setTodoItems] = useState(initData);
+// add code to pull data from db with api endpoint at /api/todos
 
-export newItem;
-export setNewItem;
-export todoItems;
-export setTodoItems;
-
-export function TodoList() {
+export default function TodoList({ hooks }) {
   return (
     <div>
       <h1>Todo List</h1>
-      <ListItems />
+      <ListItems hooks={hooks} />
     </div>
   );
 }
 
-export function ListItems() {
+function ListItems({ hooks }) {
   return (
     <ul className="list">
       {
-        todoItems.map(
+        hooks.todoItems.map(
           (item, i) => item && item.title
-            ? <ListItem idx={i} />
+            ? <ListItem hooks={hooks} idx={i} />
             : null
         )
       }
@@ -32,20 +25,20 @@ export function ListItems() {
   );
 }
 
-export function ListItem({ idx }) {
-  const content = todoItems[idx];
+function ListItem({ hooks, idx }) {
+  const content = hooks.todoItems[idx];
   return (
     <li key={content.id}>
       <label>
         <input
           type="checkbox"
           checked={content.complete}
-          onChange={e => handleToggleTodo(e.target.checked, content.id)} />
+          onChange={e => handleToggleTodo(hooks, e.target.checked, content.id)} />
         {content.title}
       </label>
       <button
         className="btn btn-danger"
-        onClick={e => handleTodoDel(content.id)} >
+        onClick={e => handleTodoDel(hooks, content.id)} >
         Delete
       </button>
     </li>

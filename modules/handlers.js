@@ -1,27 +1,25 @@
-import { newItem, setNewItem, todoItems, setTodoItems } from '../components/List.jsx';
-
-export const handleSubmit = (e) => {
+export const handleSubmit = (hooks, e) => {
     e.preventDefault();
-    setTodoItems(currentTodos => [
+    hooks.setTodoItems(currentTodos => [
         ...currentTodos, {
             id: crypto.randomUUID(),
-            title: newItem,
+            title: hooks.newItem,
             complete: false,
         }
     ]);
-    setNewItem("");
+    hooks.setNewItem("");
 }
 
-export const handleToggleTodo = (complete, id) => {
-    setTodos(currentTodos => currentTodos.map(
+export const handleToggleTodo = (hooks, complete, id) => {
+    hooks.setTodoItems(currentTodos => currentTodos.map(
         item => item && item.id === id
             ? { ...item, complete }
             : item
     ));
 }
 
-export const handleTodoDel = (id) => {
-    setTodos(currentTodos => currentTodos.filter(
+export const handleTodoDel = (hooks, id) => {
+    hooks.setTodoItems(currentTodos => currentTodos.filter(
         item => item && item.id !== id
     ));
 }
