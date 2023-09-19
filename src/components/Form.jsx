@@ -6,11 +6,29 @@ export default function Form() {
   const [newItem, setNewItem] = useState("");
   const [todoItems, setTodoItems] = useState([]);
 
+  // create a session key if not exists
   useEffect(() => {
     if (!localStorage.getItem('user-uuid'))
       localStorage.setItem('user-uuid', crypto.randomUUID());
     console.log(`user uuid is ${localStorage.getItem('user-uuid')}`);
   }, []);
+
+  // upload data to db on todoItems change
+  useEffect(() => {
+    fetch('/api/todos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        method: 'UPDATE',
+        uuid: localStorage.getItem('user-uuid'),
+        timestamp: (new Date()).toLocaleString(),
+        todoList: todoItems,
+      })
+    }).catch(e => {
+      console.error(e);
+      throw e;
+    });
+  }, [todoItems]);
 
   const handleSubmit = function () {
     setTodoItems(currentTodos => {
@@ -21,19 +39,6 @@ export default function Form() {
           complete: false,
         }
       ];
-      fetch('/api/todos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          method: 'UPDATE',
-          uuid: localStorage.getItem('user-uuid'),
-          timestamp: (new Date()).toLocaleString(),
-          todoList: result,
-        })
-      }).catch(e => {
-        console.error(e);
-        throw e;
-      });
       setNewItem('');
       return result;
     });
