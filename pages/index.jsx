@@ -3,19 +3,9 @@ import Head from 'next/head';
 
 import Form from '../components/Form.jsx';
 
-function componentDidMount() {
-  let uuid = localStorage.getItem('uuid-mongodb');
-  if (!uuid) {
-    localStorage.setItem(crypto.randomUUID());
-    uuid = localStorage.getItem('uuid');
-  }
-  return [];
-}
-
 export default function Home() {
-  const initData = [];
   let [newItem, setNewItem] = useState("");
-  let [todoItems, setTodoItems] = useState(initData);
+  let [todoItems, setTodoItems] = useState([]);
   return (
     <>
       <Head>

@@ -1,27 +1,27 @@
-export const handleSubmit = async (hooks) => {
-    const uuid = crypto.randomUUID();
-    try {
-        const res = await fetch('/api/todos', {
-            method: 'POST',
-            headers: { 'Conten-Type': 'application/json' },
-            body: {
-                method: 'UPDATE',
-                uuid: uuid,
+export const handleSubmit = async (hooks, uuid) => {
+    hooks.setTodoItems(currentTodos => {
+        const result = [
+            ...currentTodos, {
+                id: uuid,
                 title: hooks.newItem,
                 complete: false,
             }
+        ];
+        fetch('/api/todos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                method: 'UPDATE',
+                uuid: uuid,
+                timestamp: (new Date()).toLocaleString(),
+                todoList: result,
+            })
+        }).catch(e => {
+            console.error(e);
+            throw e;
         });
-    } catch (e) {
-        console.error(e);
-        alert(e);
-    }
-    hooks.setTodoItems(currentTodos => [
-        ...currentTodos, {
-            id: uuid,
-            title: hooks.newItem,
-            complete: false,
-        }
-    ]);
+        return result;
+    });
     hooks.setNewItem('');
 }
 

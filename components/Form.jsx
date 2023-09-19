@@ -13,8 +13,16 @@ export default function Form({ hooks }) {
           value={hooks.newItem}
           onChange={e => { hooks.setNewItem(e.target.value); }} />
       </div>
-      <button className="btn" onClick={e => handleSubmit(hooks, e)}>Add</button>
-      <TodoList hooks={hooks}/>
+      <button className="btn"
+        onClick={e => {
+          if (!localStorage.getItem('user-uuid')) {
+            localStorage.setItem('user-uuid', crypto.randomUUID());
+          }
+          handleSubmit(hooks, localStorage.getItem('user-uuid'))
+        }}>
+        Add
+      </button>
+      <TodoList hooks={hooks} />
     </form>
   )
 }
