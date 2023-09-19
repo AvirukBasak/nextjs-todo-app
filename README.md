@@ -1,18 +1,25 @@
-# NextJS Template
-This is a starter template for [Learn Next.js](https://nextjs.org/learn).
+# NextJS Todo App
+Features:
+- ReactJS Frontend
+- NextJS Framework
+- MongoDB with CRUD API
 
-## Getting started
-Create a new project using
+## Get started
+Create a `.env.local` at the project root and give it an entry in followong format
 ```
-npx create-next-app@latest nextjs-app --use-npm --example "https://github.com/AvirukBasak/nextjs-template-app"
+MONGODB_URI='mongodb+srv://<username>:<passswd>@<some_domain>/?retryWrites=true&w=majority'
 ```
-- Do not touch `pages/_app.tsx`
-- Make changes to `pages/*.tsx`
-- Add global CSS to `styles/global.css`
-- Add styles in `styles/*.module.css`
+You will find the above URI in MongoDB Atlas (you'll need to hunt a little for it or create a new cluster if you don't have one).
+
+
+Alternatively, for local MongoDB server instance
+```
+MONGODB_URI='mongodb://0.0.0.0:27017'
+```
 
 ## Run server
 ```
-npm install
+npm i
+npm i dev
 npm run dev
 ```
