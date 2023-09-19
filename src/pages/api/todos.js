@@ -1,4 +1,4 @@
-import clientPromise from '../../lib/mongodb';
+import clientPromise from '@/lib/mongodb';
 
 async function downloadData(uuid) {
     const client = await clientPromise;

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import Form from '../components/Form.jsx';
+import Form from '@/components/Form';
 
 export default function Home() {
   return (

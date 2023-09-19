@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import TodoList from './List.jsx';
+import TodoList from '@/components/List';
 
 export default function Form() {
 
