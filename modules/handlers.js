@@ -11,7 +11,6 @@ export const handleSubmit = async (hooks) => {
                 complete: false,
             }
         });
-        hooks.setApiCallState(res);
     } catch (e) {
         console.error(e);
         alert(e);
@@ -39,4 +38,3 @@ export const handleTodoDel = (hooks, id) => {
         item => item && item.id !== id
     ));
 }
-

@@ -16,7 +16,6 @@ export default function Home() {
   const initData = [];
   let [newItem, setNewItem] = useState("");
   let [todoItems, setTodoItems] = useState(initData);
-  let [apiCallState, setApiCallState] = useState(null);
   return (
     <>
       <Head>
@@ -25,8 +24,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <Form hooks={{ newItem, setNewItem,
-                     todoItems, setTodoItems,
-                     apiCallState, setApiCallState }} />
+                     todoItems, setTodoItems, }} />
     </>
   );
 }
