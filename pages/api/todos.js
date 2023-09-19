@@ -5,6 +5,7 @@ async function downloadData(uuid) {
     const db = client.db('nextjs-todo-db');
     try {
         const data = await db.collection('todos').findOne({ uuid });
+        console.log('download: ' + JSON.stringify({ uuid: data.uuid, todoList: data.todoList }));
         return { uuid: data.uuid, todoList: data.todoList };
     } catch (e) {
         console.error(e);
@@ -12,12 +13,14 @@ async function downloadData(uuid) {
 }
 
 async function uploadData(uuid, todoList) {
+    console.log('upload: ' + JSON.stringify({ uuid, todoList }));
     const client = await clientPromise;
     const db = client.db('nextjs-todo-db');
     try {
         const res = await db.collection('todos').replaceOne(
             { uuid },
-            { uuid, todoList }
+            { uuid, todoList },
+            { upsert : true }
         );
         return { echo: { uuid, todoList }, response: { status: 200, message: 'OK', ...res }};
     } catch (e) {
@@ -79,7 +82,7 @@ export default async (req, res) => {
                     });
                     return;
                 }
-                const data = downloadData(reqBody.uuid);
+                const data = await downloadData(reqBody.uuid);
                 res.json({ status: 200, data });
                 return;
             case 'CREATE':
