@@ -45,7 +45,8 @@ export default function Form() {
      called 2wice on start:
      1ce on init and 1ce on todoItems changed after READ in ListItems */
   useEffect(() => {
-    fetch('/api/todos', {
+    /* upload only if array not empty */
+    todoItems.length && fetch('/api/todos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -61,7 +62,7 @@ export default function Form() {
   }, [todoItems]);
 
   const handleSubmit = function () {
-    setTodoItems(currentTodos => {
+    newItem &&  setTodoItems(currentTodos => {
       const result = [
         ...currentTodos, {
           id: crypto.randomUUID(),
