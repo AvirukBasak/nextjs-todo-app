@@ -17,9 +17,10 @@ Alternatively, for local MongoDB server instance
 MONGODB_URI='mongodb://0.0.0.0:27017'
 ```
 
+**Note**: Only use `0.0.0.0` for the IP address or MongoDB local server will refuse connections.
+
 ## Run server
 ```
-npm i
-npm i dev
+npm install
 npm run dev
 ```
