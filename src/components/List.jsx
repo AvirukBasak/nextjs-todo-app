@@ -6,7 +6,7 @@ import buttstyles from '@/styles/Button.module.css';
 export default function TodoList({ value, setValue }) {
   return (
     <div>
-      <h3>List of items</h3>
+      <h3>{value.length ? "List of items" : "No Items to Display"}</h3>
       <ListItems value={value} setValue={setValue} />
     </div>
   );

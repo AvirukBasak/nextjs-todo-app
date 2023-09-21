@@ -46,7 +46,7 @@ export default function Form() {
      1ce on init and 1ce on todoItems changed after READ in ListItems */
   useEffect(() => {
     /* upload only if array not empty */
-    todoItems.length && fetch('/api/todos', {
+    !inputDisabled && fetch('/api/todos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
