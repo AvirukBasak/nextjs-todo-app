@@ -1,7 +1,12 @@
+import Button from '@/components/Button';
+
+import styles from '@/styles/List.module.css';
+import buttstyles from '@/styles/Button.module.css';
+
 export default function TodoList({ value, setValue }) {
   return (
     <div>
-      <h1>Todo List</h1>
+      <h3>List of items</h3>
       <ListItems value={value} setValue={setValue} />
     </div>
   );
@@ -9,7 +14,7 @@ export default function TodoList({ value, setValue }) {
 
 function ListItems({ value, setValue }) {
   return (
-    <ul className="list">
+    <ul className={styles.list}>
       {
         value.map(
           item => item && item.title
@@ -46,11 +51,10 @@ function ListItem({ value, setTodoItems }) {
           onChange={e => handleToggleTodo(value.id, e.target.checked)} />
         {value.title}
       </label>
-      <button
-        className="btn btn-danger"
-        onClick={e => handleTodoDel(value.id)} >
-        Delete
-      </button>
+      <Button
+        label="Delete"
+        onClick={e => handleTodoDel(value.id)}
+        additionalClassesList={[ buttstyles.btnDanger ]} />
     </li>
   );
 }

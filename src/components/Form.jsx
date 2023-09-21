@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
+
+import Button from '@/components/Button';
 import TodoList from '@/components/List';
+
+import styles from '@/styles/Form.module.css';
 
 export default function Form() {
 
@@ -71,8 +75,9 @@ export default function Form() {
   }
 
   return (
-    <form onSubmit={e => e.preventDefault()} className="new-item-form">
-      <div className="form-row">
+    <form onSubmit={e => e.preventDefault()} className={styles.newItemForm}>
+      <h1>Todo List</h1>
+      <div className={styles.formRow}>
         <label htmlFor="item">New Item</label>
         <input
           id="item"
@@ -82,12 +87,11 @@ export default function Form() {
           placeholder={inputDisabled ? 'Loading Server Data...' : 'Enter new todo item'}
           onChange={e => { setNewItem(e.target.value); }} />
       </div>
-      <button
-        className="btn"
+      <Button
         disabled={inputDisabled}
-        onClick={handleSubmit}>
-        {inputDisabled ? 'Loading Server Data...' : 'Add Item'}
-      </button>
+        onClick={handleSubmit}
+        disabledHint="Loading Server Data..."
+        label="Add Item" />
       <TodoList value={todoItems} setValue={setTodoItems} />
     </form>
   )
